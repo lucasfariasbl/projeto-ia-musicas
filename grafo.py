@@ -8,8 +8,8 @@ class Grafo:
             self.adjacencias[musica] = {}
 
     def conecta_musicas(self, m1, m2, peso):
-        self.adjacencias[m1][m2] = peso
-        self.adjacencias[m2][m1] = peso
+        self.adjacencias.setdefault(m1, {})[m2] = peso
+        self.adjacencias.setdefault(m2, {})[m1] = peso
 
     def obter_vizinhos(self, musica):
         return self.adjacencias.get(musica, {})
