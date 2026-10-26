@@ -17,13 +17,19 @@ PESOS = {
     "liveness": 0.2,       # baixo: modelo ruidoso
 }
 
+
 def normaliza(valor, minimo, maximo):
     v = (valor - minimo) / (maximo - minimo)
     return max(0.0, min(1.0, v))
 
+
 class Musica:
 
     def __init__(self, id_spotify, nome, artista, **dados):
+        faltando = [c for c in PESOS if c not in dados]
+        if faltando:
+            raise ValueError(f"Colunas ausentes para '{nome}': {faltando}")
+
         self.id = id_spotify
         self.nome = nome
         self.artista = artista

@@ -7,33 +7,84 @@ BASE = Path(__file__).resolve().parent
 CAMINHO_CSV = BASE / "data" / "playlist.csv"
 CAMINHO_PKL = BASE / "data" / "grafo_cache.pkl"
 
+K_VIZINHOS = 10
+VERSAO_CACHE = 3  # aumente se mudar a estrutura de Grafo/Musica
+
+
+def _cache_valido(cache):
+    return (
+        isinstance(cache, dict)
+        and cache.get("versao") == VERSAO_CACHE
+        and cache.get("k") == K_VIZINHOS
+        and cache.get("csv_mtime") == CAMINHO_CSV.stat().st_mtime
+    )
+
 
 def carregar_grafo():
-    # se o grafo já foi gerado antes, só carrega do disco
+    if not CAMINHO_CSV.exists():
+        raise FileNotFoundError(f"CSV não encontrado: {CAMINHO_CSV}")
+
+    # usa o cache só se for da mesma versão/CSV; qualquer erro => regenera
     if CAMINHO_PKL.exists():
-        with open(CAMINHO_PKL, "rb") as arquivo:
-            return pickle.load(arquivo)
+        try:
+            with open(CAMINHO_PKL, "rb") as arquivo:
+                cache = pickle.load(arquivo)
+            if _cache_valido(cache):
+                return cache["grafo"], cache["playlist"]
+        except Exception:
+            pass
 
-    # senão, gera a partir do csv e guarda para as próximas execuções
-    print("Gerando o grafo (primeira execução)...")
-    grafo, playlist = construir_grafo(CAMINHO_CSV)
+    print("Gerando o grafo...")
+    grafo, playlist = construir_grafo(CAMINHO_CSV, K_VIZINHOS)
 
-    CAMINHO_PKL.parent.mkdir(exist_ok=True)
+    CAMINHO_PKL.parent.mkdir(parents=True, exist_ok=True)
     with open(CAMINHO_PKL, "wb") as arquivo:
-        pickle.dump((grafo, playlist), arquivo)
+        pickle.dump({
+            "versao": VERSAO_CACHE,
+            "k": K_VIZINHOS,
+            "csv_mtime": CAMINHO_CSV.stat().st_mtime,
+            "grafo": grafo,
+            "playlist": playlist,
+        }, arquivo)
 
     return grafo, playlist
+
+
+def mostrar_caminho(grafo, origem, destino, expoente):
+    caminho, custo = grafo.dijkstra(origem, destino, expoente)
+
+    print(f"\n=== Dijkstra (expoente={expoente}) ===")
+    if caminho is None:
+        print("Não existe caminho entre as duas músicas.")
+        return
+
+    saltos = grafo.pesos_do_caminho(caminho)
+    print(f"Custo total: {custo:.4f} | Músicas: {len(caminho)}", end="")
+    if saltos:
+        print(f" | Maior salto: {max(saltos):.4f} | Salto médio: {sum(saltos) / len(saltos):.4f}")
+    else:
+        print()
+
+    for i, musica in enumerate(caminho):
+        salto = f" (salto {saltos[i - 1]:.4f})" if i > 0 else ""
+        print(f" {i + 1:>2}. {musica}{salto}")
 
 
 if __name__ == "__main__":
     grafo_playlist, playlist = carregar_grafo()
 
-    musica_teste = playlist[288]
-    vizinhos = grafo_playlist.obter_vizinhos(musica_teste)
+    if len(playlist) < 2:
+        raise SystemExit("A playlist precisa de pelo menos 2 músicas.")
 
-    print(f"\nVizinhos de '{musica_teste}':")
+    componentes = grafo_playlist.componentes_conexos()
+    print(f"Músicas: {len(playlist)} | Componentes conexos: {len(componentes)}"
+          f" | Maior componente: {len(componentes[0])}")
 
-    vizinhos_ordenados = sorted(vizinhos.items(), key=lambda item: item[1])
+    origem = playlist[min(288, len(playlist) - 1)]
+    destino = playlist[0] if origem != playlist[0] else playlist[-1]
 
-    for vizinho, peso in vizinhos_ordenados:
-        print(f" -> {vizinho} | Custo: {peso:.4f}")
+    print(f"\nOrigem: {origem}\nDestino: {destino}")
+
+    # compara soma simples com custo ao quadrado
+    for expoente in (1, 2):
+        mostrar_caminho(grafo_playlist, origem, destino, expoente)
