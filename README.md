@@ -59,18 +59,18 @@ projeto-ia-musicas/
 
 ## Como Executar o Projeto
 
-### 1. Pré-requisitos
+#### 1. Pré-requisitos
 
 Certifique-se de ter o **Python 3.9 ou superior** e o **pip** instalados em sua máquina.
 
-### 2. Clonar o Repositório
+#### 2. Clonar o Repositório
 
 ```bash
 git clone https://github.com/lucasfariasbl/projeto-ia-musicas.git
 cd projeto-ia-musicas
 ```
 
-### 3. Criar e Ativar o Ambiente Virtual
+#### 3. Criar e Ativar o Ambiente Virtual
 
 **Windows (PowerShell):**
 
@@ -86,7 +86,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-### 4. Instalar as Dependências
+#### 4. Instalar as Dependências
 
 ```bash
 python -m pip install --upgrade pip
@@ -97,7 +97,7 @@ pip install numpy pandas streamlit
 
 ## Uso da Aplicação
 
-### Opção A: Execução via Terminal (Análise e Testes)
+#### Opção A: Execução via Terminal (Análise e Testes)
 
 Executa a lógica de carregamento do grafo, cálculo de componentes conexos e comparação de caminhos.
 
@@ -105,7 +105,7 @@ Executa a lógica de carregamento do grafo, cálculo de componentes conexos e co
 python main.py
 ```
 
-### Opção B: Interface Web Interativa (Streamlit)
+#### Opção B: Interface Web Interativa (Streamlit)
 
 Inicia o painel gráfico no navegador para explorar as rotas musicais e as recomendações.
 
@@ -113,7 +113,7 @@ Inicia o painel gráfico no navegador para explorar as rotas musicais e as recom
 streamlit run app.py
 ```
 
-### Funcionalidades da Interface
+## Funcionalidades da Interface
 
 1. **Seleção de Músicas:** escolha a música de origem e a de destino ou sorteie um par aleatório.
 2. **Caminho Otimizado:** visualize a lista de músicas intermediárias sugeridas pelo Dijkstra.
