@@ -1,6 +1,6 @@
 # 🎵 Projeto IA: Busca em Grafo para Gerar Sequências de Músicas
 
-Uma aplicação em Python para a geração de playlists e transições musicais contínuas. O sistema utiliza **busca em grafos (algoritmo de Dijkstra)** e **kNN (*k-Nearest Neighbors*)** para encontrar caminhos entre duas músicas, buscando tornar as transições entre faixas mais graduais e musicalmente coerentes.
+Uma aplicação em Python para a geração de playlists e transições musicais contínuas. O sistema utiliza **busca em grafos (algoritmo de Dijkstra)** e **kNN (*k-Nearest Neighbors*)** para encontrar caminhos entre duas músicas, buscando tornar as transições entre faixas suaves, graduais e musicalmente coerentes.
 
 ---
 
