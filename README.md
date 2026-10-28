@@ -6,7 +6,7 @@ Uma aplicação em Python para a geração de playlists e transições musicais 
 
 ## Motivação e Objetivo
 
-Escolher sequências de músicas aleatórias ou baseadas apenas no gênero pode resultar em diferenças significativas de ritmo, energia, harmonia e outras características sonoras entre faixas consecutivas. Para reduzir essas diferenças, o projeto representa as músicas em um **grafo de similaridade sonora**, no qual os nós correspondem às faixas e as arestas representam conexões entre músicas com características sonoras semelhantes.
+Escolher sequências de músicas aleatórias ou baseadas apenas no gênero pode resultar em diferenças significativas de ritmo, harmonia e outras características sonoras entre faixas consecutivas. Para reduzir essas diferenças, o projeto representa as músicas em um **grafo de similaridade sonora**, no qual os nós correspondem às faixas e as arestas representam conexões entre músicas com características sonoras semelhantes.
 
 A partir de uma música inicial e outra de destino, a aplicação utiliza o algoritmo de Dijkstra para encontrar um caminho entre elas, considerando os custos das transições entre faixas. Dessa forma, busca-se selecionar músicas intermediárias que tornem a progressão das características sonoras mais gradual, proporcionando uma transição mais fluida para o ouvinte.
 
