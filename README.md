@@ -145,8 +145,8 @@ streamlit run app.py
   - Pedro Leal e Lima
 - **Componente Curricular:** Inteligência Artificial
 - **Professor:** Eanes Torres Pereira
-- **Período:** 2026.5
+- **Período:** 2026.2
 
 ---
 
-**Observação:** Este projeto foi desenvolvido para fins educacionais, com foco no estudo de Inteligência Artificial e Algoritmos de Busca.
+**Observação:** Este projeto foi desenvolvido para fins educacionais, com foco no estudo de Algoritmos de Busca.
