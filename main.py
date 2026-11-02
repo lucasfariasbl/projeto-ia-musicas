@@ -88,3 +88,4 @@ if __name__ == "__main__":
     # compara soma simples com custo ao quadrado
     for expoente in (1, 2):
         mostrar_caminho(grafo_playlist, origem, destino, expoente)
+

@@ -2,9 +2,11 @@ import random
 
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 from main import carregar_grafo
 from recomendador_knn import RecomendadorKNN
+from visualizar import html_do_caminho
 
 st.set_page_config(page_title="Transição entre músicas", layout="wide")
 
@@ -32,6 +34,14 @@ ordem = sorted(range(len(playlist)), key=lambda i: str(playlist[i]).lower())
 
 def rotulo(i):
     return str(playlist[i])
+
+
+def mostrar_html(html, altura):
+    # st.iframe existe nas versões novas do Streamlit; components.html, nas antigas
+    if hasattr(st, "iframe"):
+        st.iframe(html, height=altura)
+    else:
+        components.html(html, height=altura)
 
 
 def sortear():
@@ -64,7 +74,9 @@ with col_c:
 origem = playlist[st.session_state.origem]
 destino = playlist[st.session_state.destino]
 
-aba_caminho, aba_similares = st.tabs(["Sequência (Dijkstra)", "Músicas similares (kNN)"])
+aba_caminho, aba_similares, aba_grafo = st.tabs(
+    ["Sequência (Dijkstra)", "Músicas similares (kNN)", "Visualização do grafo"]
+)
 
 # ---------------------------------------------------------------- caminho
 with aba_caminho:
@@ -139,3 +151,54 @@ with aba_similares:
         }),
         hide_index=True,
     )
+
+# ---------------------------------------------------------------- visualização
+with aba_grafo:
+    st.write(
+        "Região do grafo ao redor da sequência: o caminho escolhido pelo Dijkstra "
+        "aparece em destaque, cercado pelas músicas vizinhas de cada parada. "
+        "**Arraste um nó**: as arestas funcionam como molas e puxam as músicas ligadas a ele."
+    )
+
+    if origem == destino:
+        st.info("Escolha músicas diferentes para visualizar o caminho.")
+    else:
+        c1, c2, c3 = st.columns([3, 4, 3])
+        with c1:
+            expoente_grafo = st.radio(
+                "Sequência destacada",
+                list(EXPOENTES),
+                format_func=lambda e: EXPOENTES[e],
+                key="expoente_grafo",
+            )
+        with c2:
+            max_vizinhas = st.slider(
+                "Vizinhas mostradas por música do caminho",
+                0, 20, 6,
+                help="0 mostra só o caminho. Valores altos deixam o desenho mais cheio.",
+            )
+        with c3:
+            pesos_todos = st.checkbox(
+                "Escrever o peso em todas as arestas",
+                help="Por padrão só as arestas do caminho mostram o peso; nas demais, "
+                     "passe o mouse sobre a linha.",
+            )
+
+        caminho_grafo, _ = grafo.dijkstra(origem, destino, expoente_grafo)
+
+        if caminho_grafo is None:
+            st.warning("Não existe caminho entre essas duas músicas no grafo.")
+        else:
+            altura = 720
+            html, subgrafo = html_do_caminho(
+                grafo, caminho_grafo, max_vizinhas, pesos_todos, altura
+            )
+            st.caption(
+                f"Mostrando {subgrafo.number_of_nodes()} músicas e "
+                f"{subgrafo.number_of_edges()} arestas. "
+                "Verde = música inicial, azul = música alvo, vermelho = paradas do caminho, "
+                "cinza = vizinhas (passe o mouse para ver o nome). Os números nas arestas "
+                "são as distâncias originais (sem o expoente). Use a roda do mouse para "
+                "dar zoom e arraste o fundo para mover a visão."
+            )
+            mostrar_html(html, altura + 20)
