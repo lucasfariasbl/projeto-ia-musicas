@@ -2,11 +2,9 @@ import random
 
 import pandas as pd
 import streamlit as st
-import streamlit.components.v1 as components
 
 from main import carregar_grafo
 from recomendador_knn import RecomendadorKNN
-from visualizar import html_do_caminho
 
 st.set_page_config(page_title="Recomendador de Músicas", layout="wide")
 
@@ -29,14 +27,6 @@ ordem = sorted(range(len(playlist)), key=lambda i: str(playlist[i]).lower())
 
 def rotulo(i):
     return str(playlist[i])
-
-
-def mostrar_html(html, altura):
-    # st.iframe existe nas versões novas do Streamlit; components.html, nas antigas
-    if hasattr(st, "iframe"):
-        st.iframe(html, height=altura)
-    else:
-        components.html(html, height=altura)
 
 
 def sortear():
@@ -127,3 +117,5 @@ if similares:
         musica_alvo.nome: list(musica_alvo.caracteristicas.values()),
         top_1.nome: list(top_1.caracteristicas.values()),
     }).set_index("Atributo")
+
+    st.bar_chart(df_comp)
