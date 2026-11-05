@@ -11,7 +11,7 @@ PESOS = {
     "valence": 1.0,
     "tempo": 0.3,          # baixo: BPM às vezes erra pelo dobro
     "acousticness": 1.5,
-    "instrumentalness": 0.8,
+    "instrumentalness": 0.4,
     "loudness": 1.0,
     "speechiness": 0.5,
     "liveness": 0.2,       # baixo: modelo ruidoso
