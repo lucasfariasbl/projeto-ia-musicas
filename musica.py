@@ -8,7 +8,7 @@ LIMITES = {
 PESOS = {
     "danceability": 1.0,
     "energy": 1.5,
-    "valence": 1.0,
+    "valence": 1.5,
     "tempo": 0.3,          # baixo: BPM às vezes erra pelo dobro
     "acousticness": 1.5,
     "instrumentalness": 0.8,
