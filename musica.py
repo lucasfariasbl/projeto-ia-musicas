@@ -11,7 +11,7 @@ PESOS = {
     "valence": 1.0,
     "tempo": 0.3,          # baixo: BPM às vezes erra pelo dobro
     "acousticness": 1.5,
-    "instrumentalness": 0.4,
+    "instrumentalness": 0.8,
     "loudness": 1.0,
     "speechiness": 0.5,
     "liveness": 0.2,       # baixo: modelo ruidoso
@@ -50,8 +50,15 @@ class Musica:
     def __hash__(self):
         return hash(self.id)
 
-    def calcula_distancia(self, m2):
-        return math.sqrt(sum(
-            peso * (self.caracteristicas[c] - m2.caracteristicas[c]) ** 2
+    def calcula_distancia(self, m2, expoente=1):
+        """
+        Calcula a distância entre duas músicas aplicando o expoente na diferença de cada atributo.
+
+        - expoente=1: Soma linear dos desvios (permite saltos maiores em atributos isolados -> transição mais pesada)
+        - expoente=2: Penalização quadrática dos desvios (evita qualquer salto grande em atributos -> transição mais suave)
+        """
+        soma = sum(
+            peso * (abs(self.caracteristicas[c] - m2.caracteristicas[c]) ** expoente)
             for c, peso in PESOS.items()
-        ))
+        )
+        return math.pow(soma, 1 / expoente)
