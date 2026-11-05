@@ -57,4 +57,3 @@ if __name__ == "__main__":
 
     componentes = grafo_playlist.componentes_conexos()
     print(f"Músicas: {len(playlist)} | Componentes conexos: {len(componentes)}"
-          f" | Maior componente: {len(componentes[0])}")
