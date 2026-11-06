@@ -21,7 +21,7 @@ class RecomendadorKNN:
         if k <= 0:
             raise ValueError("k deve ser maior que zero.")
 
-        return nsmallest(
+        return nsmallest( # retorna uma lista com os n menores elementos de um iterável, ordenados de forma ascendente (do menor para o maior).
             k,
             self._distancias(musica_referencia, expoente),
             key=lambda item: item[1],
